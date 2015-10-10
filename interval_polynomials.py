@@ -1,0 +1,53 @@
+import interval
+from interval import interval as it
+
+def polynomial(l): # Dando erro pra l = [2,1,1] e it[-1,1], mas não sei por quê
+    """ input: a list [a0 a1 ... an] of coefficients
+        output: a function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n"""
+    if len(l) == 0:
+        return (lambda x: 0)
+    def f(x):
+        y = l[-1]
+        for num in range(len(l)-1):
+            y = x*y + l[-num-2]
+        return y
+    return f
+
+def derivative_polynomial(l):
+    """ input: a list [a0 a1 ... an] of coefficients
+        output: the derivative of the function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n"""
+    return polynomial(derivative_coefficients(l))
+
+def derivative_coefficients(l):
+    return [(i+1)*l[i+1] for i in range(len(l)-1)]
+
+def max_min_polynomial(l,i):
+    """ input: a list [a0 a1 ... an] of coefficients and an interval i (domain)
+        output: (y,x), x = argmin f(x), y = argmax f(x), where x is f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n on the interval i
+        CAUTION: Not yet sure how intervals are ordered, but it seems they are ordered by the order of the lesser end."""
+    f = polynomial(l)
+    d = derivative_polynomial(l)
+    d2 = derivative_polynomial(derivative_coefficients(l)) # second derivative
+    
+    critical = i.newton(d,d2)
+    x = i.extrema[0]
+    y = x
+    maxim = f(x)
+    minim = maxim
+    if f(i.extrema[1]) > maxim:
+        x = i.extrema[1]
+        maxim = f(i.extrema[1])
+    else:
+        y = i.extrema[1]
+        minim = f(i.extrema[1])
+    for interv in critical.components:
+        for ponto in interv.extrema:
+            value = f(ponto)
+            if value > maxim:
+                x = ponto
+                maxim = value
+            elif value < minim:
+                y = ponto
+                minim = value
+    return (y,x)
+    
