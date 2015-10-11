@@ -7,16 +7,18 @@
 #    """ input: an iterable of pairs of floats
 #        output: an object "interv" that represents an union of closed intervals, one interval for each pair of #floats, using them as extremes """
 
+import struct
 from fpu import up, down
 
 class Interv_single:
-    N = {"N0", "N1"}
-    P = {"P0", "P1"}
     def classify(self): # Doesn't return anything, just changes the interv_class parameter.
+        N = {"N0", "N1"}
+        P = {"P0", "P1"}
         self.interv_class = ""
-        l = 0
-        r = 0
-        # l: -1 if inf < 0, l = 0 if inf = 0, l = 1 if inf > 1; same for r
+        inf = self.inf
+        sup = self.inf
+        if inf == float("nan"):
+            self.interv_class = "E" # empty
         if inf < 0:
             if sup > 0:
                 self.interv_class = "M"
@@ -33,26 +35,76 @@ class Interv_single:
             self.interv_class = "P1"
 
     def __init__(self, a,b):     
-    """ input: a pair of floats (x,y)
+        """ input: a pair of floats (x,y)
         output: an object "interv" that represents the closed interval [min(x,y),max(x,y)]"""
-        inf = min(a,b)
-        sup = max(a,b)
-        self.inf = inf
-        self.sup = sup
-        classify(self)
+        if a == float("nan") or b == float("nan"):
+            self.inf = float("nan")
+            self.sup = float("nan")
+        else:
+            inf = min(a,b)
+            sup = max(a,b)
+            self.inf = inf
+            self.sup = sup
+        Interv_single.classify(self)
         
+    def __repr__(self):
+        return "<%s,%s>" % (self.inf, self.sup)
+
     def __add__(self,other):
         return Interv_single(down(lambda: self.inf + other.inf), up(lambda:(self.sup + other.sup)))
     def __sub__(self,other):
         return Interv_single(down(lambda: self.inf - other.inf), up(lambda: (self.sup - other.sup)))
     def __mul__(self,other):
-        prod = [self.inf * other.inf, self.inf * other.sup, self.sup * other.if, self.eup * other.sup]
-        return Interv_single(m
+        N = {"N0", "N1"}
+        P = {"P0", "P1"}
+
+        inf = 0
+        sup = 0
+        c1 = self.interv_class
+        c2 = other.interv_class
+        if c1 == "E" or c2 == "E":
+            inf = float("nan")
+            sup = float("nan")
+        elif c1 == 'Z' or c2 == 'Z':
+            inf = 0
+            sup = 0
+        elif c1 in P:
+            if c2 in P:
+                inf = down(lambda: self.inf * other.inf)
+                sup = up(lambda: self.sup * other.sup)
+            elif c2 == 'M':
+                inf = down(lambda: self.sup * other.inf)
+                sup = up(lambda: self.sup * other.sup)
+            else: #c2 in N:
+                inf = down(lambda: self.sup * other.inf)
+                sup = up(lambda: self.inf * other.sup)
+        elif c1 == 'M':
+            if c2 in P:
+                inf = down(lambda: self.inf * other.sup)
+                sup = up(lambda: self.sup * other.sup)
+            elif c2 == 'M':
+                inf = min(down(lambda: self.inf * other.sup), down(lambda: self.sup * other.inf))
+                sup = max(up(lambda: self.sup * other.sup), up(lambda: self.inf * other.inf))
+            else: #c2 in N
+                inf = down(lambda: self.sup * other.inf)
+                sup = up(lambda: self.inf * other.inf)
+        else: #c1 in N
+            if c2 in P:
+                inf = down(lambda: self.inf * other.sup)
+                sup = up(lambda: self.sup * other.inf)
+            elif c2 == 'M':
+                inf = down(lambda: self.inf * other.sup)
+                sup = up(lambda: self.inf * other.inf)
+            else: #c2 in N
+                inf = down(lambda: self.sup * other.sup)
+                sup = up(lambda: self.inf * other.inf)
+
+        return Interv_single(inf,sup)
         
 
 
 
----
+#---
 
 def binary(num):
     # Struct can provide us with the float packed into bytes. The '!' ensures that
