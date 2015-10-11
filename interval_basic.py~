@@ -16,7 +16,7 @@ class Interv_single:
         P = {"P0", "P1"}
         self.interv_class = ""
         inf = self.inf
-        sup = self.inf
+        sup = self.sup
         if inf == float("nan"):
             self.interv_class = "E" # empty
         if inf < 0:
@@ -48,7 +48,8 @@ class Interv_single:
         Interv_single.classify(self)
         
     def __repr__(self):
-        print "<%s,%s>" % (self.inf, self.sup)
+        return "<%s,%s>" % (self.inf, self.sup)
+
     def __add__(self,other):
         return Interv_single(down(lambda: self.inf + other.inf), up(lambda:(self.sup + other.sup)))
     def __sub__(self,other):

@@ -16,7 +16,7 @@ class Interv_single:
         P = {"P0", "P1"}
         self.interv_class = ""
         inf = self.inf
-        sup = self.inf
+        sup = self.sup
         if inf == float("nan"):
             self.interv_class = "E" # empty
         if inf < 0:
