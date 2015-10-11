@@ -154,7 +154,20 @@ class Interv_single:
                 inf = down(lambda: self.sup / other.inf)
                 sup = up(lambda: self.inf / other.sup)
 
-        return Interv_single(inf,sup)            
+        return Interv_single(inf,sup)      
+
+    def inters(self,other):
+        """ Interval intersection""" 
+        inf = max(self.inf, other.inf)
+        sup = min(self.sup, other.sup)
+        if inf > sup:
+            inf = float("nan")
+            sup = float("nan")
+        return Interv_single(inf,sup)
+
+    def newton(self,f,d):
+        """ Input: a function f and its derivative d
+            Output: a contracted interval where all the zeroes of f in I"""
 #---
 
 def binary(num):
