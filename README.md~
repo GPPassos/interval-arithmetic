@@ -7,5 +7,5 @@ TODO:
     * \[**Done!**\] Soma
     * \[**Done!**\] Subtração
     * \[**Done!**\] Produto
-    * \[**Done!**\] Divisão
+    * Divisão
 * Implementar método de Newton intervalar (creio que tudo bem seguir o [http://conference.scipy.org/proceedings/scipy2008/paper_3/full_text.pdf](http://conference.scipy.org/proceedings/scipy2008/paper_3/full_text.pdf) )

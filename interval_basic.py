@@ -41,8 +41,8 @@ class Interv_single:
             self.inf = float("nan")
             self.sup = float("nan")
         else:
-            inf = min(a,b)
-            sup = max(a,b)
+            inf = float(min(a,b))
+            sup = float(max(a,b))
             self.inf = inf
             self.sup = sup
         Interv_single.classify(self)
@@ -101,9 +101,60 @@ class Interv_single:
 
         return Interv_single(inf,sup)
         
+    def __div__(self,other):
+        N = {"N0", "N1"}
+        P = {"P0", "P1"}
 
+        inf = 0
+        sup = 0
+        c1 = self.interv_class
+        c2 = other.interv_class
+        if c2 == "E" or c1 == "E":
+            inf = float("nan")
+            sup = float("nan")
+        elif c2 == "Z":
+            inf = float("nan")
+            sup = float("nan")
+        elif c1 == "Z":
+            inf = 0
+            sup = 0
+        elif c2 in P:
+            if c1 == "P1":
+                inf = down(lambda: self.inf / other.sup)
+                sup = up(lambda: self.up / other.inf)
+            elif c1 == "P0":
+                inf = 0
+                sup = up(lambda: self.up / other.inf)
+            elif c1 == "M":
+                inf = down(lambda: self.inf / other.inf)
+                sup = up(lambda: self.sup / other.inf)
+            elif c1 == "N0":
+                inf = down(lambda: self.inf / other.inf)
+                sup = 0
+            else: #c1 == "N1":
+                inf = down(lambda: self.inf / other.inf)
+                sup = up(lambda: self.sup / other.sup)
+        elif c2 == "M":
+            inf = float("-inf")
+            sup = float("inf")
+        elif c2 in N:
+            if c1 == "P1":
+                inf = down(lambda: self.sup / other.sup)
+                sup = up(lambda: self.inf / other.inf)
+            elif c1 == "P0":
+                inf = down(lambda: self.sup / other.sup)
+                sup = 0
+            elif c1 == "M":
+                inf = down(lambda: self.sup / other.sup)
+                sup = up(lambda: self.inf / other.sup)
+            elif c1 == "N0":
+                inf = 0
+                sup = up(lambda: self.inf / other.sup)
+            else: #c1 == "N1":
+                inf = down(lambda: self.sup / other.inf)
+                sup = up(lambda: self.inf / other.sup)
 
-
+        return Interv_single(inf,sup)            
 #---
 
 def binary(num):
