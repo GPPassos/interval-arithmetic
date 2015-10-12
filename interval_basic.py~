@@ -40,11 +40,13 @@ class Interv_single:
         if a == float("nan") or b == float("nan"):
             self.inf = float("nan")
             self.sup = float("nan")
+            self.midpoint = float("nan")
         else:
             inf = float(min(a,b))
             sup = float(max(a,b))
             self.inf = inf
             self.sup = sup
+            self.midpoint = (inf+sup)/2
         Interv_single.classify(self)
         
     def __repr__(self):
@@ -137,10 +139,10 @@ class Interv_single:
         elif c2 == "P1":
             if c1 == "P1":
                 inf = down(lambda: self.inf / other.sup)
-                sup = up(lambda: self.up / other.inf)
+                sup = up(lambda: self.sup / other.inf)
             elif c1 == "P0":
                 inf = 0
-                sup = up(lambda: self.up / other.inf)
+                sup = up(lambda: self.sup / other.inf)
             elif c1 == "M":
                 inf = down(lambda: self.inf / other.inf)
                 sup = up(lambda: self.sup / other.inf)
@@ -155,20 +157,20 @@ class Interv_single:
             sup = float("inf")
         elif c2 == "N0":
             if c1 == "P1":
-                inf = down(lambda: self.sup / other.sup)
+                inf = float("-inf")
                 sup = up(lambda: self.inf / other.inf)
             elif c1 == "P0":
-                inf = down(lambda: self.sup / other.sup)
+                inf = float("-inf")
                 sup = 0
             elif c1 == "M":
-                inf = down(lambda: self.sup / other.sup)
-                sup = up(lambda: self.inf / other.sup)
+                inf = float("-inf")
+                sup = float("inf")
             elif c1 == "N0":
                 inf = 0
-                sup = up(lambda: self.inf / other.sup)
+                sup = float("+inf")
             else: #c1 == "N1":
                 inf = down(lambda: self.sup / other.inf)
-                sup = up(lambda: self.inf / other.sup)
+                sup = float("+inf")
         elif c2 == "N1":
             if c1 == "P1":
                 inf = down(lambda: self.sup / other.sup)
@@ -197,9 +199,36 @@ class Interv_single:
             sup = float("nan")
         return Interv_single(inf,sup)
 
-    def newton(self,f,d):
+    def newton(self,f,d,maxiter = 10000):
         """ Input: a function f and its derivative d
             Output: a contracted interval where all the zeroes of f in I"""
+        def passo(x, i):
+            return i.inters(Interv_single(x,x) - (Interv_single(f(x),f(x)) / d(i)))
+        def amostra(i):
+            yield i.midpoint
+            yield i.inf
+            yield i.sup
+        def iteracao(i):
+            atual = i
+            for n in xrange(maxiter):
+                anterior = atual
+                for valor in amostra(atual):
+                    atual = passo(valor,atual)
+                    print atual
+                    if atual != anterior:
+                        break
+                else:
+                    return atual
+            return atual
+        return iteracao(self)
+    
+def roda(k=10000):
+    z = Interv_single(-100,100)
+    f = lambda x: (x*x - 1)*(x-2) # input: float; output: float
+    d = lambda x: Interv_single(3,3)*x*x - Interv_single(4,4)*x - Interv_single(1,1) # input: interval; output: interval
+    print z.newton(f,d,k)
+
+        
 #---
 
 # This isn't used in the code above. It's here just so that we can confirm the binary float form of each number
