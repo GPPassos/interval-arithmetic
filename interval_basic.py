@@ -118,7 +118,23 @@ class Interv_single:
         elif c1 == "Z":
             inf = 0
             sup = 0
-        elif c2 in P:
+        elif c2 == "P0":
+            if c1 == "P1":
+                inf = down(lambda: self.inf / other.sup)
+                sup = float("+inf")
+            elif c1 == "P0":
+                inf = 0
+                sup = float("+inf")
+            elif c1 == "M":
+                inf = float("-inf")
+                sup = float("inf")
+            elif c1 == "N0":
+                inf = float("-inf")
+                sup = 0
+            else: #c1 == "N1":
+                inf = float("-inf")
+                sup = up(lambda: self.sup / other.sup)
+        elif c2 == "P1":
             if c1 == "P1":
                 inf = down(lambda: self.inf / other.sup)
                 sup = up(lambda: self.up / other.inf)
@@ -137,7 +153,23 @@ class Interv_single:
         elif c2 == "M":
             inf = float("-inf")
             sup = float("inf")
-        elif c2 in N:
+        elif c2 == "N0":
+            if c1 == "P1":
+                inf = float("-inf")
+                sup = up(lambda: self.inf / other.inf)
+            elif c1 == "P0":
+                inf = float("-inf")
+                sup = 0
+            elif c1 == "M":
+                inf = float("-inf")
+                sup = float("inf")
+            elif c1 == "N0":
+                inf = 0
+                sup = float("+inf")
+            else: #c1 == "N1":
+                inf = down(lambda: self.sup / other.inf)
+                sup = float("+inf")
+        elif c2 == "N1":
             if c1 == "P1":
                 inf = down(lambda: self.sup / other.sup)
                 sup = up(lambda: self.inf / other.inf)
@@ -169,6 +201,8 @@ class Interv_single:
         """ Input: a function f and its derivative d
             Output: a contracted interval where all the zeroes of f in I"""
 #---
+
+# This isn't used in the code above. It's here just so that we can confirm the binary float form of each number
 
 def binary(num):
     # Struct can provide us with the float packed into bytes. The '!' ensures that
