@@ -11,9 +11,9 @@ import struct
 from fpu import up, down
 
 class Interv_single:
+    _N_ = {"N0", "N1"}
+    _P_ = {"P0", "P1"}
     def classify(self): # Doesn't return anything, just changes the interv_class parameter.
-        N = {"N0", "N1"}
-        P = {"P0", "P1"}
         self.interv_class = ""
         inf = self.inf
         sup = self.sup
@@ -57,9 +57,6 @@ class Interv_single:
     def __sub__(self,other):
         return Interv_single(down(lambda: self.inf - other.inf), up(lambda: (self.sup - other.sup)))
     def __mul__(self,other):
-        N = {"N0", "N1"}
-        P = {"P0", "P1"}
-
         inf = 0
         sup = 0
         c1 = self.interv_class
@@ -104,8 +101,6 @@ class Interv_single:
         return Interv_single(inf,sup)
         
     def __div__(self,other):
-        N = {"N0", "N1"}
-        P = {"P0", "P1"}
 
         inf = 0
         sup = 0
@@ -190,6 +185,16 @@ class Interv_single:
 
         return Interv_single(inf,sup)      
 
+    def __pow__(self,other):
+        if self.interv_class == "M":
+            if other%2 == 0:
+                maximo = max(abs(self.inf),abs(self.other))
+                return Interv_single(0,maximo**other)
+            else:
+                return Interv_single(self.inf**other,self.sup**other)
+        else:  # N, P, Z, E
+            return Interv_single(self.inf**other,self.sup**other)
+
     def inters(self,other):
         """ Interval intersection""" 
         inf = max(self.inf, other.inf)
@@ -200,6 +205,7 @@ class Interv_single:
         return Interv_single(inf,sup)
 
     def newton(self,f,d,maxiter = 10000):
+        # This is currently bugged!
         """ Input: a function f and its derivative d
             Output: a contracted interval where all the zeroes of f in I"""
         def passo(x, i):
