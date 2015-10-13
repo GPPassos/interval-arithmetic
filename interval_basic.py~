@@ -13,6 +13,7 @@ from fpu import up, down
 class Interv_single:
     _N_ = {"N0", "N1"}
     _P_ = {"P0", "P1"}
+
     def classify(self): # Doesn't return anything, just changes the interv_class parameter.
         self.interv_class = ""
         inf = self.inf
@@ -67,18 +68,18 @@ class Interv_single:
         elif c1 == 'Z' or c2 == 'Z':
             inf = 0
             sup = 0
-        elif c1 in _P_:
-            if c2 in _P_:
+        elif c1 in self._P_:
+            if c2 in self._P_:
                 inf = down(lambda: self.inf * other.inf)
                 sup = up(lambda: self.sup * other.sup)
             elif c2 == 'M':
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.sup * other.sup)
-            else: #c2 in _N_:
+            else: #c2 in self._N_:
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.inf * other.sup)
         elif c1 == 'M':
-            if c2 in _P_:
+            if c2 in self._P_:
                 inf = down(lambda: self.inf * other.sup)
                 sup = up(lambda: self.sup * other.sup)
             elif c2 == 'M':
@@ -88,7 +89,7 @@ class Interv_single:
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.inf * other.inf)
         else: #c1 in N
-            if c2 in _P_:
+            if c2 in self._P_:
                 inf = down(lambda: self.inf * other.sup)
                 sup = up(lambda: self.sup * other.inf)
             elif c2 == 'M':
