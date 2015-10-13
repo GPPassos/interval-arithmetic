@@ -67,18 +67,18 @@ class Interv_single:
         elif c1 == 'Z' or c2 == 'Z':
             inf = 0
             sup = 0
-        elif c1 in P:
-            if c2 in P:
+        elif c1 in _P_:
+            if c2 in _P_:
                 inf = down(lambda: self.inf * other.inf)
                 sup = up(lambda: self.sup * other.sup)
             elif c2 == 'M':
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.sup * other.sup)
-            else: #c2 in N:
+            else: #c2 in _N_:
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.inf * other.sup)
         elif c1 == 'M':
-            if c2 in P:
+            if c2 in _P_:
                 inf = down(lambda: self.inf * other.sup)
                 sup = up(lambda: self.sup * other.sup)
             elif c2 == 'M':
@@ -88,7 +88,7 @@ class Interv_single:
                 inf = down(lambda: self.sup * other.inf)
                 sup = up(lambda: self.inf * other.inf)
         else: #c1 in N
-            if c2 in P:
+            if c2 in _P_:
                 inf = down(lambda: self.inf * other.sup)
                 sup = up(lambda: self.sup * other.inf)
             elif c2 == 'M':

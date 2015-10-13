@@ -188,7 +188,7 @@ class Interv_single:
     def __pow__(self,other):
         if self.interv_class == "M":
             if other%2 == 0:
-                maximo = max(abs(self.inf),abs(self.other))
+                maximo = max(abs(self.inf),abs(self.sup))
                 return Interv_single(0,maximo**other)
             else:
                 return Interv_single(self.inf**other,self.sup**other)
