@@ -190,11 +190,11 @@ class Interv_single:
         if self.interv_class == "M":
             if other%2 == 0:
                 maximo = max(abs(self.inf),abs(self.sup))
-                return Interv_single(0,maximo**other)
+                return Interv_single(0,up(lambda:maximo**other))
             else:
-                return Interv_single(self.inf**other,self.sup**other)
+                return Interv_single(down(lambda:self.inf**other),up(lambda:self.sup**other))
         else:  # N, P, Z, E
-            return Interv_single(self.inf**other,self.sup**other)
+            return Interv_single(down(lambda:self.inf**other),up(lambda:self.sup**other))
 
     def inters(self,other):
         """ Interval intersection""" 

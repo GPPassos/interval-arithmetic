@@ -56,7 +56,7 @@ class Interv_single:
     def __add__(self,other):
         return Interv_single(down(lambda: self.inf + other.inf), up(lambda:(self.sup + other.sup)))
     def __sub__(self,other):
-        return Interv_single(down(lambda: self.inf - other.inf), up(lambda: (self.sup - other.sup)))
+        return Interv_single(down(lambda: self.inf - other.sup), up(lambda: (self.sup - other.inf)))
     def __mul__(self,other):
         inf = 0
         sup = 0

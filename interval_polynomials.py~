@@ -1,7 +1,11 @@
+#--encoding:utf-8
+
 import interval
 from interval import interval as it
 
-def polynomial(l): # Dando erro pra l = [2,1,1] e it[-1,1], mas não sei por quê
+from interval_basic import Interv_single as itv
+
+def polynomial(l):
     """ input: a list [a0 a1 ... an] of coefficients
         output: a function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n"""
     if len(l) == 0:
@@ -10,6 +14,19 @@ def polynomial(l): # Dando erro pra l = [2,1,1] e it[-1,1], mas não sei por qu�
         y = l[-1]
         for num in range(len(l)-1):
             y = x*y + l[-num-2]
+        return y
+    return f
+
+def another_polynomial(l):
+    """ input: a list [a0 a1 ... an] of coefficients
+        output: a function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n"""
+    if len(l) == 0
+        return (lambda x: 0)
+
+    def f(x):
+        y = 0
+        for num in range(len(l)):
+            y += l[num]*(x**num)
         return y
     return f
 
