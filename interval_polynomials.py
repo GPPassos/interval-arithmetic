@@ -19,7 +19,8 @@ def polynomial(l):
 
 def another_polynomial(l):
     """ input: a list [a0 a1 ... an] of coefficients
-        output: a function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n"""
+        output: a function f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n
+        NOTE: You should use this for the Interv_single class in order to have an interval of lesser width."""
     if len(l) == 0:
         return (lambda x: 0)
 
@@ -41,7 +42,8 @@ def derivative_coefficients(l):
 def max_min_polynomial(l,i):
     """ input: a list [a0 a1 ... an] of coefficients and an interval i (domain)
         output: (y,x), x = argmin f(x), y = argmax f(x), where x is f(x) = a0 + a1*x + a2*x**2 + ... + an*x**n on the interval i
-        CAUTION: Not yet sure how intervals are ordered, but it seems they are ordered by the order of the lesser end."""
+        CAUTION: Not yet sure how intervals are ordered, but it seems they are ordered by the order of the lesser end.
+        CAUTION: Still bugged."""
     f = polynomial(l)
     d = derivative_polynomial(l)
     d2 = derivative_polynomial(derivative_coefficients(l)) # second derivative
